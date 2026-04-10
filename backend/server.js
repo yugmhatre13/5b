@@ -40,9 +40,12 @@ const startServer = async () => {
       console.log(`MongoDB Connected: ${conn.connection.host}`);
     }
 
-    app.listen(PORT, () => {
-      console.log(`Server running on port ${PORT}`);
-    });
+    // Only start listening if we aren't heavily hooked in a serverless env (like Vercel)
+    if (process.env.NODE_ENV !== 'production') {
+      app.listen(PORT, () => {
+        console.log(`Server running on port ${PORT}`);
+      });
+    }
   } catch (error) {
     console.error(`Error: ${error.message}`);
     process.exit(1);
@@ -50,3 +53,6 @@ const startServer = async () => {
 };
 
 startServer();
+
+// Export the app for Vercel Serverless
+export default app;
